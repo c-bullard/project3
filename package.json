@@ -1,0 +1,23 @@
+{
+  "name": "fullstack-scaffold",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:client": "npm run dev --workspace client",
+    "dev:server": "npm run dev --workspace server",
+    "dev": "concurrently -n CLIENT,SERVER \"npm run dev --workspace client\" \"npm run dev --workspace server\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
