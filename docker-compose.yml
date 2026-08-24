@@ -1,38 +1,40 @@
 services:
   db:
     image: postgres:14
+    container_name: pg-docker
     environment:
       - DATABASE_HOST=127.0.0.1
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=cards
     ports:
       - '5432:5432'
     volumes:
       - $HOME/docker/volumes/postgres:/var/lib/postgresql/data
 
-  server:
-    build: ./server
-    environment:
-      PORT: 8080
-      DATABASE_URL: postgres://postgres:docker@db:5432/dbname
-    ports:
-      - '8080:8080'
-    volumes:
-      - ./server:/app
-      - /app/node_modules
-    depends_on:
-      - 'db'
+  # server:
+  #   build: ./server
+  #   environment:
+  #     PORT: 8080
+  #     DATABASE_URL: postgres://postgres:docker@db:5432/dbname
+  #   ports:
+  #     - '8080:8080'
+  #   volumes:
+  #     - ./server:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     - 'db'
 
-  client:
-    build: ./client
-    restart: unless-stopped
-    ports:
-      - '5173:5173'
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    depends_on:
-      - 'server'
+  # client:
+  #   build: ./client
+  #   restart: unless-stopped
+  #   ports:
+  #     - '5173:5173'
+  #   volumes:
+  #     - ./client:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     - 'server'
 
 volumes:
   db-data:
