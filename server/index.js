@@ -77,7 +77,11 @@ app.get('/decks/:deckID', (req, res) => {
     if (!deck) {
       return res.status(404).json({ error: 'Deck not found' });
     }
-    res.status(200).json({ ...deck, cards });
+    const parsedCards = cards.map((card) => ({
+      ...card,
+      usd: parsePrice(card.usd),
+    }));
+    res.status(200).json({ ...deck, cards: parsedCards });
   });
 });
 

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/decks.css';
 
 export default function Decks() {
+  const navigate = useNavigate();
   const [decks, setDecks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -49,7 +51,11 @@ export default function Decks() {
           </thead>
           <tbody>
             {decks.map((deck) => (
-              <tr key={deck.id}>
+              <tr
+                key={deck.id}
+                className="deck-row"
+                onClick={() => navigate(`/decks/${deck.id}`)}
+              >
                 <td>{deck.id}</td>
                 <td>{deck.name}</td>
                 <td>{deck.description}</td>

@@ -55,7 +55,7 @@ export default function CardDetails({
               <div className="card-details-row">
                 <span className="card-details-label">Set</span>
                 <span>
-                  {card.set_name}
+                  {card.set_name}{' '}
                   {card.set_code ? `(${card.set_code.toUpperCase()})` : ''}
                 </span>
               </div>
