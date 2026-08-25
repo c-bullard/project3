@@ -6,11 +6,17 @@ exports.seed = async function (knex) {
   // Deletes ALL existing entries
   await knex('decks').del();
   await knex('decks').insert([
-    { name: 'Mono-Red Aggro', description: 'Ligtning Bolt for everyone' },
     {
-      name: 'Azorius Control',
-      description: 'Counterspell, Counterspell, Counterspell',
+      name: 'Return of the King',
+      description: 'Aragorn and the men of the West',
     },
-    { name: 'Squirrels', description: 'Nothing but squirrels' },
+    {
+      name: 'Rivendell Elves',
+      description: 'Nothing but Arwen',
+    },
+    {
+      name: 'What about Second Breakfast?',
+      description: 'Hobbits shenanigans',
+    },
   ]);
 };

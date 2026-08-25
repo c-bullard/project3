@@ -7,12 +7,12 @@ exports.seed = async function (knex) {
   await knex('collection').del();
 
   const cards = [
-    { name: 'Sol Ring', quantity: 2 },
-    { name: 'Lightning Bolt', quantity: 4 },
-    { name: 'Counterspell', quantity: 3 },
-    { name: 'Llanowar Elves', quantity: 4 },
-    { name: 'Birds of Paradise', quantity: 1 },
-    { name: 'Cultivate', quantity: 2 },
+    { name: 'Delighted Halfling', quantity: 2 },
+    { name: 'Aragorn, the Uniter', quantity: 1 },
+    { name: 'Arwen, Mortal Queen', quantity: 1 },
+    { name: 'Bilbo, Retired Burglar', quantity: 3 },
+    { name: 'Assault on Osgiliath', quantity: 2 },
+    { name: 'Bag End Porter', quantity: 4 },
   ];
 
   const collectionRows = [];

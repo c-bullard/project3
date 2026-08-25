@@ -8,30 +8,29 @@ exports.seed = async function (knex) {
 
   const deckLists = [
     {
-      deckName: 'Mono-Red Aggro',
+      deckName: 'Return of the King',
       cards: [
-        { name: 'Lightning Bolt', quantity: 4 },
-        { name: 'Sol Ring', quantity: 1 },
+        { name: 'Aragorn, the Uniter', quantity: 1, is_commander: true },
+        { name: 'Aragorn, Company Leader', quantity: 1 },
+        { name: 'Assault on Osgiliath', quantity: 1 },
       ],
     },
     {
-      deckName: 'Azorius Control',
+      deckName: 'I ❤︎⁠ Liv Tyler',
       cards: [
-        { name: 'Counterspell', quantity: 4 },
-        { name: 'Swords to Plowshares', quantity: 3 },
-        { name: 'Brainstorm', quantity: 4 },
+        { name: 'Arwen, Mortal Queen', quantity: 1, is_commander: true },
+        { name: 'Arwen Undómiel', quantity: 1 },
+        { name: "Arwen's Gift", quantity: 1 },
+        { name: 'Chance-Met Elves', quantity: 1 },
       ],
     },
     {
-      deckName: 'Squirrels',
+      deckName: 'What about Second Breakfast?',
       cards: [
-        {
-          name: 'The Unbeatable Squirrel Girl',
-          quantity: 1,
-          is_commander: true,
-        },
-        { name: 'Earl of Squirrel', quantity: 1 },
-        { name: 'Squirrel Sovereign', quantity: 1 },
+        { name: 'Bilbo, Retired Burglar', quantity: 1, is_commander: true },
+        { name: 'Delighted Halfling', quantity: 1 },
+        { name: 'Bag End Porter', quantity: 1 },
+        { name: 'Brandywine Farmer', quantity: 1 },
       ],
     },
   ];

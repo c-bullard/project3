@@ -16,7 +16,7 @@ exports.seed = async function (knex) {
   await knex('cards').del();
 
   const rows = JSON.parse(
-    fs.readFileSync('/home/chad/sdi/project3/server/data/cards.json'),
+    fs.readFileSync('/home/chad/sdi/project3/server/data/starting_data.json'),
   );
   const cardRows = rows.map((row) => {
     return {
@@ -24,8 +24,10 @@ exports.seed = async function (knex) {
       mana_cost: row.mana_cost,
       oracle_text: row.oracle_text,
       set_name: row.set_name,
+      set_code: row.set_code,
+      type_line: row.type_line,
       image_url: row.image_url,
-      usd: parsePrice(row.usd),
+      usd: parsePrice(row.price_usd),
     };
   });
 
