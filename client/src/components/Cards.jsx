@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Pagination from './Pagination';
 import SearchBar from './SearchBar';
+import CardDetails from './CardDetails';
 import '../styles/cards.css';
 
 const cardsPerPage = 48;
@@ -11,6 +12,7 @@ export default function Cards() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
+  const [selectedCard, setSelectedCard] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,9 +71,11 @@ export default function Cards() {
         <>
           <div className="card-grid">
             {visibleCards.map((card) => (
-              <div className="card" key={card.id}>
-                <img src={card.image_url} alt={card.name} />
-              </div>
+              <button key={card.id} onClick={() => setSelectedCard(card)}>
+                <div className="card">
+                  <img src={card.image_url} alt={card.name} />
+                </div>
+              </button>
             ))}
           </div>
           <Pagination
@@ -79,6 +83,11 @@ export default function Cards() {
             totalPages={totalPages}
             onPrev={() => setPage((p) => Math.max(1, p - 1))}
             onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
+          />
+          <CardDetails
+            card={selectedCard}
+            open={selectedCard !== null}
+            onClose={() => setSelectedCard(null)}
           />
         </>
       )}
