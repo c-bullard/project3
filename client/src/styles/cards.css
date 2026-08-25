@@ -1,0 +1,49 @@
+.search-bar {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid grey;
+}
+
+.card-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card-grid img {
+  width: 250px;
+  border: 2px solid white;
+  border-radius: 10px;
+}
+
+.card {
+  padding: 10px;
+}
+
+.page-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.page-btn button {
+  width: 70px;
+  background-color: grey;
+}
+
+.status-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: bolder;
+  font-size: 2.5rem;
+}

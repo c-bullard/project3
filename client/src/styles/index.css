@@ -1,0 +1,30 @@
+:root {
+  --text: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+  }
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  border-inline: 2px solid var(--border);
+  min-height: 100svh;
+  box-sizing: border-box;
+}
