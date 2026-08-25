@@ -28,7 +28,12 @@ app.get('/collection', (req, res) => {
   knex('collection')
     .join('cards', 'collection.card_id', '=', 'cards.id')
     .select(
+      'cards.id',
       'cards.name',
+      'cards.mana_cost',
+      'cards.type_line',
+      'cards.oracle_text',
+      'cards.set_code',
       'cards.set_name',
       'collection.quantity',
       'cards.usd',

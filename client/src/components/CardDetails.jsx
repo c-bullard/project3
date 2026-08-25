@@ -10,7 +10,12 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CardDetails({ card, open, onClose }) {
+export default function CardDetails({
+  card,
+  open,
+  onClose,
+  actionLabel = 'Add to collection',
+}) {
   if (!card) {
     return null;
   }
@@ -65,9 +70,7 @@ export default function CardDetails({ card, open, onClose }) {
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} autoFocus>
-          Add to collection
-        </Button>
+        <Button onClick={onClose}>{actionLabel}</Button>
       </DialogActions>
     </Dialog>
   );
