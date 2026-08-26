@@ -52,6 +52,46 @@ app.get('/collection', (req, res) => {
     });
 });
 
+app.post('/collection', (req, res) => {
+  const { card_id } = req.body;
+
+  knex('collection')
+    .where({ card_id })
+    .first()
+    .then((existing) => {
+      if (existing) {
+        return knex('collection').where({ card_id }).increment('quantity', 1);
+      }
+      return knex('collection').insert({ card_id, quantity: 1 });
+    })
+    .then(() => res.status(200).json({ status: 'ok' }));
+});
+
+app.delete('/collection/:cardID', (req, res) => {
+  const { cardID } = req.params;
+
+  knex('collection')
+    .where({ card_id: cardID })
+    .first()
+    .then((existing) => {
+      if (!existing) {
+        return res.status(404).json({ error: 'Card not in collection' });
+      }
+      if (existing.quantity > 1) {
+        return knex('collection')
+          .where({ card_id: cardID })
+          .decrement('quantity', 1)
+          .then(() => res.status(200).json({ status: 'ok' }));
+      }
+      return knex('collection')
+        .where({ card_id: cardID })
+        .del()
+        .then(() =>
+          res.status(200).json({ message: 'Card successfully deleted.' }),
+        );
+    });
+});
+
 app.get('/decks', (req, res) => {
   knex('decks')
     .select('*')
@@ -83,6 +123,26 @@ app.get('/decks/:deckID', (req, res) => {
     }));
     res.status(200).json({ ...deck, cards: parsedCards });
   });
+});
+
+app.delete('/decks/:deckID', (req, res) => {
+  const { deckID } = req.params;
+
+  knex('decks')
+    .where({ id: deckID })
+    .first()
+    .then((existing) => {
+      if (!existing) {
+        return res.status(404).json({ error: 'Deck not found' });
+      }
+      return knex('deck_cards')
+        .where({ deck_id: deckID })
+        .del()
+        .then(() => knex('decks').where({ id: deckID }).del())
+        .then(() =>
+          res.status(200).json({ message: 'Deck successfully deleted' }),
+        );
+    });
 });
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
