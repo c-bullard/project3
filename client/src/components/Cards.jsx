@@ -35,6 +35,18 @@ export default function Cards() {
     fetchData();
   }, []);
 
+  const addToCollection = async (card) => {
+    try {
+      await fetch('http://localhost:8080/collection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ card_id: card.id }),
+      });
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
     setPage(1);
@@ -88,6 +100,7 @@ export default function Cards() {
             card={selectedCard}
             open={selectedCard !== null}
             onClose={() => setSelectedCard(null)}
+            onAction={addToCollection}
           />
         </>
       )}

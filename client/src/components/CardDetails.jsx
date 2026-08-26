@@ -42,11 +42,17 @@ export default function CardDetails({
   card,
   open,
   onClose,
+  onAction,
   actionLabel = 'Add to collection',
 }) {
   if (!card) {
     return null;
   }
+
+  const handleAction = () => {
+    onAction?.(card);
+    onClose();
+  };
 
   return (
     <Dialog
@@ -94,11 +100,17 @@ export default function CardDetails({
                 <span>${card.usd}</span>
               </div>
             )}
+            {card.quantity != null && (
+              <div className="card-details-row">
+                <span className="card-details-label">Quantity</span>
+                <span>{card.quantity}</span>
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>{actionLabel}</Button>
+        <Button onClick={handleAction}>{actionLabel}</Button>
       </DialogActions>
     </Dialog>
   );

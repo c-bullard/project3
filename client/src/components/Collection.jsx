@@ -35,6 +35,35 @@ export default function Collection() {
     fetchData();
   }, []);
 
+  if (cards.length === 0) {
+    return <p className="status-message">No cards in collection</p>;
+  }
+
+  if (loading) {
+    return <p className="status-message">Loading cards...</p>;
+  }
+
+  if (error) {
+    return <p className="status-message">Error: {error}</p>;
+  }
+
+  const removeFromCollection = async (card) => {
+    try {
+      await fetch(`http://localhost:8080/collection/${card.id}`, {
+        method: 'DELETE',
+      });
+      setCards((prev) =>
+        prev
+          .map((c) =>
+            c.id === card.id ? { ...c, quantity: c.quantity - 1 } : c,
+          )
+          .filter((c) => c.quantity > 0),
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
     setPage(1);
@@ -42,6 +71,11 @@ export default function Collection() {
 
   const filteredCards = cards.filter((card) =>
     card.name.toLowerCase().includes(search.trim().toLowerCase()),
+  );
+
+  const collectionTotal = cards.reduce(
+    (sum, card) => sum + (card.usd != null ? card.usd * card.quantity : 0),
+    0,
   );
 
   const totalPages = Math.max(
@@ -54,17 +88,10 @@ export default function Collection() {
     startIndex + cardsPerPage,
   );
 
-  if (loading) {
-    return <p className="status-message">Loading cards...</p>;
-  }
-
-  if (error) {
-    return <p className="status-message">Error: {error}</p>;
-  }
-
   return (
     <>
       <SearchBar value={search} onChange={handleSearchChange} />
+      <p className="collection-total">Total value: ${collectionTotal}</p>
       {filteredCards.length === 0 ? (
         <p className="status-message">No cards match "{search}".</p>
       ) : (
@@ -74,6 +101,7 @@ export default function Collection() {
               <button key={card.id} onClick={() => setSelectedCard(card)}>
                 <div className="card">
                   <img src={card.image_url} alt={card.name} />
+                  <span className="card-quantity-badge">x{card.quantity}</span>
                 </div>
               </button>
             ))}
@@ -88,6 +116,7 @@ export default function Collection() {
             card={selectedCard}
             open={selectedCard !== null}
             onClose={() => setSelectedCard(null)}
+            onAction={removeFromCollection}
             actionLabel="Remove from collection"
           />
         </>

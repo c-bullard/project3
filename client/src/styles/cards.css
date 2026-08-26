@@ -23,7 +23,20 @@
 }
 
 .card {
+  position: relative;
   padding: 10px;
+}
+
+.card-quantity-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 12px;
 }
 
 .card-grid button {
@@ -74,6 +87,12 @@
 
 .card-details-label {
   font-weight: bold;
+}
+
+.collection-total {
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin: 10px;
 }
 
 .mana-cost {
