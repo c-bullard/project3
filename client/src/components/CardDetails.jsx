@@ -10,6 +10,34 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const manaIcons = {
+  W: '../../public/white.png',
+  B: '../../public/black.png',
+  U: '../../public/blue.png',
+  G: '../../public/green.png',
+  R: '../../public/red.png',
+};
+
+function ManaCost({ cost }) {
+  const symbols = cost.match(/\{[^}]+\}/g) ?? [cost];
+
+  return (
+    <div className="mana-cost">
+      {symbols.map((symbol, i) => {
+        const key = symbol.replace(/[{}]/g, '');
+        const icon = manaIcons[key];
+        return icon ? (
+          <img key={i} src={icon} alt={key} className="mana-symbol" />
+        ) : (
+          <span key={i} className="mana-symbol mana-symbol-text">
+            {key}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function CardDetails({
   card,
   open,
@@ -36,7 +64,7 @@ export default function CardDetails({
             {card.mana_cost && (
               <div className="card-details-row">
                 <span className="card-details-label">Mana Cost</span>
-                <span>{card.mana_cost}</span>
+                <ManaCost cost={card.mana_cost} />
               </div>
             )}
             {card.type_line && (

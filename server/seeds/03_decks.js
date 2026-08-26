@@ -11,7 +11,7 @@ exports.seed = async function (knex) {
       description: 'Aragorn and the men of the West',
     },
     {
-      name: 'Rivendell Elves',
+      name: 'I ❤︎⁠ Liv Tyler',
       description: 'Nothing but Arwen',
     },
     {

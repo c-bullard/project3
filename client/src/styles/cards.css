@@ -75,3 +75,21 @@
 .card-details-label {
   font-weight: bold;
 }
+
+.mana-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.mana-symbol {
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+
+.mana-symbol-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
