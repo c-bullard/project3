@@ -67,6 +67,16 @@ app.post('/collection', (req, res) => {
     .then(() => res.status(200).json({ status: 'ok' }));
 });
 
+app.post('/decks/:deckID', (req, res) => {
+  const { deckID } = req.params;
+  const { card_id, quantity, is_commander } = req.body;
+  knex('deck_cards')
+    .insert({ deck_id: deckID, card_id, quantity, is_commander })
+    .then(() =>
+      res.status(200).json({ message: `Card added to deck: ${deckID}` }),
+    );
+});
+
 app.delete('/collection/:cardID', (req, res) => {
   const { cardID } = req.params;
 
@@ -96,6 +106,14 @@ app.get('/decks', (req, res) => {
   knex('decks')
     .select('*')
     .then((deckData) => res.status(200).json(deckData));
+});
+
+app.post('/decks', (req, res) => {
+  const { name, description } = req.body;
+
+  knex('decks')
+    .insert({ name, description })
+    .then(() => res.status(200).json({ status: 'ok' }));
 });
 
 app.get('/decks/:deckID', (req, res) => {
