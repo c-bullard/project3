@@ -47,16 +47,19 @@ export default function Collection() {
     return <p className="status-message">Error: {error}</p>;
   }
 
-  const removeFromCollection = async (card) => {
+  const setQuantity = async (card, newQuantity) => {
+    if (newQuantity < 0) {
+      return;
+    }
     try {
       await fetch(`http://localhost:8080/collection/${card.id}`, {
-        method: 'DELETE',
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: newQuantity }),
       });
       setCards((prev) =>
         prev
-          .map((c) =>
-            c.id === card.id ? { ...c, quantity: c.quantity - 1 } : c,
-          )
+          .map((c) => (c.id === card.id ? { ...c, quantity: newQuantity } : c))
           .filter((c) => c.quantity > 0),
       );
     } catch (err) {
@@ -91,19 +94,34 @@ export default function Collection() {
   return (
     <>
       <SearchBar value={search} onChange={handleSearchChange} />
-      <p className="collection-total">Total value: ${collectionTotal}</p>
+      <p className="collection-total">
+        Total value: ${collectionTotal.toFixed(2)}
+      </p>
       {filteredCards.length === 0 ? (
         <p className="status-message">No cards match "{search}".</p>
       ) : (
         <>
           <div className="card-grid">
             {visibleCards.map((card) => (
-              <button key={card.id} onClick={() => setSelectedCard(card)}>
-                <div className="card">
-                  <img src={card.image_url} alt={card.name} />
-                  <span className="card-quantity-badge">x{card.quantity}</span>
+              <div key={card.id} className="collection-card">
+                <button onClick={() => setSelectedCard(card)}>
+                  <div className="card">
+                    <img src={card.image_url} alt={card.name} />
+                    <span className="card-quantity-badge">
+                      x{card.quantity}
+                    </span>
+                  </div>
+                </button>
+                <div className="quantity-controls">
+                  <button onClick={() => setQuantity(card, card.quantity - 1)}>
+                    −
+                  </button>
+                  <span>{card.quantity}</span>
+                  <button onClick={() => setQuantity(card, card.quantity + 1)}>
+                    +
+                  </button>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
           <Pagination
@@ -116,8 +134,6 @@ export default function Collection() {
             card={selectedCard}
             open={selectedCard !== null}
             onClose={() => setSelectedCard(null)}
-            onAction={removeFromCollection}
-            actionLabel="Remove from collection"
           />
         </>
       )}

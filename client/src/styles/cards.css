@@ -47,6 +47,30 @@
   cursor: pointer;
 }
 
+.collection-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: -6px;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.quantity-controls button {
+  width: 32px;
+  height: 32px;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  background-color: grey;
+  color: white;
+}
+
 .page-btn {
   display: flex;
   justify-content: center;

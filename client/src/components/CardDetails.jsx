@@ -38,13 +38,7 @@ function ManaCost({ cost }) {
   );
 }
 
-export default function CardDetails({
-  card,
-  open,
-  onClose,
-  onAction,
-  actionLabel = 'Add to collection',
-}) {
+export default function CardDetails({ card, open, onClose, onAction }) {
   if (!card) {
     return null;
   }
@@ -109,9 +103,11 @@ export default function CardDetails({
           </div>
         </div>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleAction}>{actionLabel}</Button>
-      </DialogActions>
+      {onAction && (
+        <DialogActions>
+          <Button onClick={handleAction}>Add to collection</Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 }

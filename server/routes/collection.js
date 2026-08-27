@@ -50,6 +50,33 @@ router.post('/', (req, res) => {
     .catch((err) => handleError(res, err));
 });
 
+router.put('/:cardID', (req, res) => {
+  const { cardID } = req.params;
+  const { quantity } = req.body;
+
+  knex('collection')
+    .where({ card_id: cardID })
+    .first()
+    .then((existing) => {
+      if (!existing) {
+        return res.status(404).json({ error: 'Card not in collection' });
+      }
+      if (quantity === 0) {
+        return knex('collection')
+          .where({ card_id: cardID })
+          .del()
+          .then(() =>
+            res.status(200).json({ message: 'Card successfully deleted.' }),
+          );
+      }
+      return knex('collection')
+        .where({ card_id: cardID })
+        .update({ quantity })
+        .then(() => res.status(200).json({ status: 'ok', quantity }));
+    })
+    .catch((err) => handleError(res, err));
+});
+
 router.delete('/:cardID', (req, res) => {
   const { cardID } = req.params;
 
