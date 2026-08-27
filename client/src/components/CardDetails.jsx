@@ -11,11 +11,11 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const manaIcons = {
-  W: '../../public/white.png',
-  B: '../../public/black.png',
-  U: '../../public/blue.png',
-  G: '../../public/green.png',
-  R: '../../public/red.png',
+  W: '/white.png',
+  B: '/black.png',
+  U: '/blue.png',
+  G: '/green.png',
+  R: '/red.png',
 };
 
 function ManaCost({ cost }) {
