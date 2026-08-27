@@ -1,7 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 const knex = require('knex')(require('./knexfile.js')['development']);
 
 app.use(cors());
@@ -14,6 +15,11 @@ const parsePrice = (priceString) => {
   return parseFloat(priceString);
 };
 
+const handleError = (res, err) => {
+  console.error(err);
+  res.status(500).json({ error: 'Internal server error' });
+};
+
 app.get('/', (req, res) => res.status(200).json({ status: 'ok' }));
 
 app.get('/cards', (req, res) => {
@@ -21,7 +27,8 @@ app.get('/cards', (req, res) => {
     .select('*')
     .then((cardData) => {
       res.status(200).json(cardData);
-    });
+    })
+    .catch((err) => handleError(res, err));
 });
 
 app.get('/collection', (req, res) => {
@@ -49,7 +56,8 @@ app.get('/collection', (req, res) => {
         };
       });
       res.status(200).json(parsedData);
-    });
+    })
+    .catch((err) => handleError(res, err));
 });
 
 app.post('/collection', (req, res) => {
@@ -64,7 +72,8 @@ app.post('/collection', (req, res) => {
       }
       return knex('collection').insert({ card_id, quantity: 1 });
     })
-    .then(() => res.status(200).json({ status: 'ok' }));
+    .then(() => res.status(200).json({ status: 'ok' }))
+    .catch((err) => handleError(res, err));
 });
 
 app.post('/decks/:deckID', (req, res) => {
@@ -74,7 +83,8 @@ app.post('/decks/:deckID', (req, res) => {
     .insert({ deck_id: deckID, card_id, quantity, is_commander })
     .then(() =>
       res.status(200).json({ message: `Card added to deck: ${deckID}` }),
-    );
+    )
+    .catch((err) => handleError(res, err));
 });
 
 app.delete('/collection/:cardID', (req, res) => {
@@ -99,13 +109,15 @@ app.delete('/collection/:cardID', (req, res) => {
         .then(() =>
           res.status(200).json({ message: 'Card successfully deleted.' }),
         );
-    });
+    })
+    .catch((err) => handleError(res, err));
 });
 
 app.get('/decks', (req, res) => {
   knex('decks')
     .select('*')
-    .then((deckData) => res.status(200).json(deckData));
+    .then((deckData) => res.status(200).json(deckData))
+    .catch((err) => handleError(res, err));
 });
 
 app.post('/decks', (req, res) => {
@@ -113,7 +125,8 @@ app.post('/decks', (req, res) => {
 
   knex('decks')
     .insert({ name, description })
-    .then(() => res.status(200).json({ status: 'ok' }));
+    .then(() => res.status(200).json({ status: 'ok' }))
+    .catch((err) => handleError(res, err));
 });
 
 app.get('/decks/:deckID', (req, res) => {
@@ -131,16 +144,18 @@ app.get('/decks/:deckID', (req, res) => {
         'cards.image_url',
       )
       .where('deck_cards.deck_id', deckID),
-  ]).then(([deck, cards]) => {
-    if (!deck) {
-      return res.status(404).json({ error: 'Deck not found' });
-    }
-    const parsedCards = cards.map((card) => ({
-      ...card,
-      usd: parsePrice(card.usd),
-    }));
-    res.status(200).json({ ...deck, cards: parsedCards });
-  });
+  ])
+    .then(([deck, cards]) => {
+      if (!deck) {
+        return res.status(404).json({ error: 'Deck not found' });
+      }
+      const parsedCards = cards.map((card) => ({
+        ...card,
+        usd: parsePrice(card.usd),
+      }));
+      res.status(200).json({ ...deck, cards: parsedCards });
+    })
+    .catch((err) => handleError(res, err));
 });
 
 app.delete('/decks/:deckID', (req, res) => {
@@ -160,7 +175,8 @@ app.delete('/decks/:deckID', (req, res) => {
         .then(() =>
           res.status(200).json({ message: 'Deck successfully deleted' }),
         );
-    });
+    })
+    .catch((err) => handleError(res, err));
 });
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
