@@ -7,6 +7,9 @@ export default function Decks() {
   const [decks, setDecks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +32,43 @@ export default function Decks() {
     fetchData();
   }, []);
 
+  const createDeck = async (event) => {
+    event.preventDefault();
+    if (!name.trim() || creating) {
+      return;
+    }
+
+    setCreating(true);
+    setError(null);
+
+    try {
+      const response = await fetch('http://localhost:8080/decks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          description: description.trim(),
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`error status: ${response.status}`);
+      }
+
+      const deckList = await fetch('http://localhost:8080/decks');
+      if (!deckList.ok) {
+        throw new Error(`error status: ${deckList.status}`);
+      }
+      const data = await deckList.json();
+      setDecks(data);
+      setName('');
+      setDescription('');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setCreating(false);
+    }
+  };
+
   if (loading) {
     return <p className="status-message">Loading decks...</p>;
   }
@@ -39,6 +79,23 @@ export default function Decks() {
 
   return (
     <>
+      <form className="deck-create-form" onSubmit={createDeck}>
+        <input
+          type="text"
+          placeholder="Deck name"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Description"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+        />
+        <button type="submit" disabled={!name.trim() || creating}>
+          Create Deck
+        </button>
+      </form>
       <div className="deck-list">
         <table>
           <caption>My Deck List</caption>

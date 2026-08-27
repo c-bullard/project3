@@ -20,6 +20,30 @@ td {
   padding: 8px 10px;
 }
 
+.deck-create-form {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 16px auto;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+}
+
+.deck-create-form input {
+  padding: 6px 8px;
+  border: 1px solid rgb(160 160 160);
+}
+
+.deck-create-form button {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.deck-create-form button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
 .deck-row {
   cursor: pointer;
 }
