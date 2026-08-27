@@ -16,8 +16,22 @@ caption {
 
 th,
 td {
-  border: 1px solid rgb(160 160 160);
+  border: 1px solid var(--border);
   padding: 8px 10px;
+}
+
+tfoot td {
+  font-weight: bold;
+  background-color: rgb(140 140 140 / 15%);
+  border-top: 3px solid rgb(140 140 140);
+}
+
+.deck-row {
+  cursor: pointer;
+}
+
+.deck-row:hover {
+  background-color: rgb(140 140 140 / 15%);
 }
 
 .deck-create-form {
@@ -25,17 +39,13 @@ td {
   gap: 8px;
   justify-content: center;
   margin: 16px auto;
-  font-family: sans-serif;
-  font-size: 0.8rem;
 }
 
-.deck-create-form input {
-  padding: 6px 8px;
-  border: 1px solid rgb(160 160 160);
+.deck-create-form .search-bar {
+  margin: 0;
 }
 
 .deck-create-form button {
-  padding: 6px 12px;
   cursor: pointer;
 }
 
@@ -44,11 +54,58 @@ td {
   opacity: 0.6;
 }
 
-.deck-row {
+.deck-add-card-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+  margin: 16px auto;
+}
+
+.deck-add-card-form input[type='number'] {
+  width: 30px;
+  padding: 6px 8px;
+  border: none;
+}
+
+.deck-add-card-form label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.deck-add-card-form button[type='submit']:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.deck-add-card-search {
+  position: relative;
+  width: 200px;
+}
+
+.deck-add-card-results {
+  position: absolute;
+  margin: 4px 0 0;
+  padding: 0;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.deck-add-card-results button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 8px;
+  background: none;
+  border: none;
   cursor: pointer;
 }
 
-.deck-row:hover {
+.deck-add-card-results button:hover {
   background-color: rgb(140 140 140 / 15%);
 }
 
@@ -64,16 +121,10 @@ td {
   z-index: 10;
   width: 250px;
   border-radius: 10px;
-  /* box-shadow: 0 4px 12px rgb(0 0 0 / 30%); */
+  box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
   pointer-events: none;
 }
 
 .deck-card-row:hover .deck-card-preview {
   display: block;
-}
-
-tfoot td {
-  font-weight: bold;
-  background-color: rgb(140 140 140 / 15%);
-  border-top: 3px solid rgb(140 140 140);
 }

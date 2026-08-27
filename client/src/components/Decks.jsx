@@ -82,12 +82,14 @@ export default function Decks() {
       <form className="deck-create-form" onSubmit={createDeck}>
         <input
           type="text"
+          className="search-bar"
           placeholder="Deck name"
           value={name}
           onChange={(event) => setName(event.target.value)}
         />
         <input
           type="text"
+          className="search-bar"
           placeholder="Description"
           value={description}
           onChange={(event) => setDescription(event.target.value)}

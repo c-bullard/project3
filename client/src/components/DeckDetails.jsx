@@ -7,6 +7,12 @@ export default function DeckDetails() {
   const [deck, setDeck] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [cards, setCards] = useState([]);
+  const [search, setSearch] = useState('');
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [isCommander, setIsCommander] = useState(false);
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +34,63 @@ export default function DeckDetails() {
 
     fetchData();
   }, [deckId]);
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/collection');
+        if (!response.ok) {
+          throw new Error(`error status: ${response.status}`);
+        }
+        const data = await response.json();
+        setCards(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchCards();
+  }, []);
+
+  const handleAddCard = async (event) => {
+    event.preventDefault();
+    if (!selectedCard || adding) {
+      return;
+    }
+
+    setAdding(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`http://localhost:8080/decks/${deckId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          card_id: selectedCard.id,
+          quantity,
+          is_commander: isCommander,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`error status: ${response.status}`);
+      }
+
+      const deckResponse = await fetch(`http://localhost:8080/decks/${deckId}`);
+      if (!deckResponse.ok) {
+        throw new Error(`error status: ${deckResponse.status}`);
+      }
+      const data = await deckResponse.json();
+      setDeck(data);
+      setSearch('');
+      setSelectedCard(null);
+      setQuantity(1);
+      setIsCommander(false);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setAdding(false);
+    }
+  };
 
   if (loading) {
     return <p className="status-message">Loading deck...</p>;
@@ -51,8 +114,69 @@ export default function DeckDetails() {
     0,
   );
 
+  const searchTerm = search.trim().toLowerCase();
+  const matches = searchTerm
+    ? cards
+        .filter((card) => card.name.toLowerCase().includes(searchTerm))
+        .slice(0, 10)
+    : [];
+
   return (
     <div className="deck-list">
+      <form className="deck-add-card-form" onSubmit={handleAddCard}>
+        <div className="deck-add-card-search">
+          <input
+            type="text"
+            className="search-bar"
+            placeholder="Search cards to add..."
+            value={selectedCard ? selectedCard.name : search}
+            onChange={(event) => {
+              setSelectedCard(null);
+              setSearch(event.target.value);
+            }}
+          />
+          {matches.length > 0 && (
+            <ul className="deck-add-card-results">
+              {matches.map((card) => (
+                <li key={card.id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedCard(card);
+                      setSearch('');
+                    }}
+                  >
+                    {card.name}
+                    {card.set_name ? ` — ${card.set_name}` : ''}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <label>
+          Qty
+          <input
+            type="number"
+            min="1"
+            value={quantity}
+            onChange={(event) =>
+              setQuantity(Math.max(1, Number(event.target.value)))
+            }
+          />
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={isCommander}
+            onChange={(event) => setIsCommander(event.target.checked)}
+          />
+          Commander
+        </label>
+        <button type="submit" disabled={!selectedCard || adding}>
+          {adding ? 'Adding...' : 'Add Card'}
+        </button>
+      </form>
       <table>
         <caption>{deck.name}</caption>
         <thead>
