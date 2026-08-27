@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/decks.css';
 
 export default function DeckDetails() {
   const { deckId } = useParams();
+  const navigate = useNavigate();
   const [deck, setDeck] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -52,7 +53,7 @@ export default function DeckDetails() {
     fetchCards();
   }, []);
 
-  const handleAddCard = async (event) => {
+  const addCardToDeck = async (event) => {
     event.preventDefault();
     if (!selectedCard || adding) {
       return;
@@ -92,6 +93,44 @@ export default function DeckDetails() {
     }
   };
 
+  const deleteDeck = async () => {
+    setError(null);
+
+    try {
+      const response = await fetch(`http://localhost:8080/decks/${deckId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`error status: ${response.status}`);
+      }
+      navigate('/decks');
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const removeCardFromDeck = async (deckCardId) => {
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/decks/${deckId}/cards/${deckCardId}`,
+        { method: 'DELETE' },
+      );
+      if (!response.ok) {
+        throw new Error(`error status: ${response.status}`);
+      }
+
+      const deckResponse = await fetch(`http://localhost:8080/decks/${deckId}`);
+      if (!deckResponse.ok) {
+        throw new Error(`error status: ${deckResponse.status}`);
+      }
+      setDeck(await deckResponse.json());
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   if (loading) {
     return <p className="status-message">Loading deck...</p>;
   }
@@ -123,7 +162,7 @@ export default function DeckDetails() {
 
   return (
     <div className="deck-list">
-      <form className="deck-add-card-form" onSubmit={handleAddCard}>
+      <form className="deck-add-card-form" onSubmit={addCardToDeck}>
         <div className="deck-add-card-search">
           <input
             type="text"
@@ -177,6 +216,15 @@ export default function DeckDetails() {
           {adding ? 'Adding...' : 'Add Card'}
         </button>
       </form>
+      <div className="deck-toolbar">
+        <button
+          type="button"
+          className="deck-delete"
+          onClick={deleteDeck}
+        >
+          Delete Deck
+        </button>
+      </div>
       <table>
         <caption>{deck.name}</caption>
         <thead>
@@ -186,11 +234,15 @@ export default function DeckDetails() {
             <th>Set</th>
             <th>Price</th>
             <th>Commander</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {deck.cards.map((card, index) => (
-            <tr key={`${card.name}-${index}`} className="deck-card-row">
+            <tr
+              key={card.deck_card_id ?? `${card.name}-${index}`}
+              className="deck-card-row"
+            >
               <td className="deck-card-name">
                 {card.name}
                 <img
@@ -203,6 +255,15 @@ export default function DeckDetails() {
               <td>{card.set_name}</td>
               <td>{card.usd != null ? `$${card.usd}` : '—'}</td>
               <td>{card.is_commander ? 'Yes' : ''}</td>
+              <td>
+                <button
+                  type="button"
+                  className="deck-card-delete"
+                  onClick={() => removeCardFromDeck(card.deck_card_id)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -212,6 +273,7 @@ export default function DeckDetails() {
             <td>{cardCount}</td>
             <td></td>
             <td>${totalPrice.toFixed(2)}</td>
+            <td></td>
             <td></td>
           </tr>
         </tfoot>

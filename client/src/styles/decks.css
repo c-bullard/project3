@@ -109,6 +109,22 @@ tfoot td {
   background-color: rgb(140 140 140 / 15%);
 }
 
+.deck-card-delete {
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.deck-toolbar {
+  display: flex;
+  justify-content: center;
+  margin: 16px auto;
+}
+
+.deck-delete {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
 .deck-card-name {
   position: relative;
 }

@@ -14,7 +14,6 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const { name, description } = req.body;
-
   knex('decks')
     .insert({ name, description })
     .then(() => res.status(200).json({ status: 'ok' }))
@@ -28,6 +27,7 @@ router.get('/:deckID', (req, res) => {
     knex('deck_cards')
       .join('cards', 'deck_cards.card_id', '=', 'cards.id')
       .select(
+        'deck_cards.id as deck_card_id',
         'cards.name',
         'cards.set_name',
         'cards.usd',
@@ -61,9 +61,22 @@ router.post('/:deckID', (req, res) => {
     .catch((err) => handleError(res, err));
 });
 
+router.delete('/:deckID/cards/:deckCardID', (req, res) => {
+  const { deckID, deckCardID } = req.params;
+  knex('deck_cards')
+    .where({ id: deckCardID, deck_id: deckID })
+    .del()
+    .then((count) => {
+      if (!count) {
+        return res.status(404).json({ error: 'Card not found in deck' });
+      }
+      res.status(200).json({ message: 'Card removed from deck' });
+    })
+    .catch((err) => handleError(res, err));
+});
+
 router.delete('/:deckID', (req, res) => {
   const { deckID } = req.params;
-
   knex('decks')
     .where({ id: deckID })
     .first()
