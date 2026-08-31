@@ -14,9 +14,9 @@ services:
 
   server:
     build: ./server
+    env_file: .env
     environment:
       PORT: ${SERVER_PORT}
-      DATABASE_URL: ${DATABASE_URL}
     ports:
       - '${SERVER_PORT}:${SERVER_PORT}'
     volumes:

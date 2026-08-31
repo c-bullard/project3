@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   knex('collection')
     .join('cards', 'collection.card_id', '=', 'cards.id')
-    .select(
+    .select([
       'cards.id',
       'cards.name',
       'cards.mana_cost',
@@ -16,17 +16,19 @@ router.get('/', (req, res) => {
       'cards.oracle_text',
       'cards.set_code',
       'cards.set_name',
-      'collection.quantity',
       'cards.usd',
       'cards.image_url',
-    )
+      'collection.quantity',
+    ])
     .then((cardData) => {
       const parsedData = cardData.map((card) => {
         const usd = parsePrice(card.usd);
+        const quantity = Number(card.quantity);
         return {
           ...card,
+          quantity,
           usd,
-          total: usd === null ? null : usd * card.quantity,
+          total: usd === null ? null : usd * quantity,
         };
       });
       res.status(200).json(parsedData);

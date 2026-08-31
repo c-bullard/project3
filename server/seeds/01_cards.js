@@ -15,9 +15,7 @@ exports.seed = async function (knex) {
   // Deletes ALL existing entries
   await knex('cards').del();
 
-  const rows = JSON.parse(
-    fs.readFileSync('/home/chad/sdi/project3/server/data/starting_data.json'),
-  );
+  const rows = JSON.parse(fs.readFileSync('/app/data/all_cards.json'));
   const cardRows = rows.map((row) => {
     return {
       name: row.name,
